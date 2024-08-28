@@ -1,4 +1,4 @@
-package be.freeaime.main;
+package be.freeaime.base;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -9,7 +9,7 @@ public class PropertyUtil {
     private PropertyUtil() {
         this.properties = new Properties();
         try (final InputStream propertiesInputStream = getClass().getClassLoader()
-                .getResourceAsStream("MainApp.properties")) {
+                .getResourceAsStream("app.properties")) {
                     if (propertiesInputStream!=null) {
                         this.properties.load(propertiesInputStream); 
                     } 

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>${app.parent.artifactId}</artifactId>
+    <groupId>${app.parent.groupId}</groupId>
+    <version>${app.parent.version}</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>be.freeaime</groupId>
-  <artifactId>uptime-logger-service</artifactId>
+  <artifactId>${app.artifactId}</artifactId>
+  <packaging>${app.child.packaging}</packaging>
   <name>${app.name}</name>
-  <version>${app.version}</version>
   <description>${app.description}</description>
   <build>
     <finalName>${project.artifactId}</finalName>
@@ -20,7 +24,7 @@
               <goal>write-project-properties</goal>
             </goals>
             <configuration>
-              <outputFile>${project.build.outputDirectory}/EntryPoint.properties</outputFile>
+              <outputFile>${project.build.outputDirectory}/app.properties</outputFile>
             </configuration>
           </execution>
         </executions>
@@ -44,7 +48,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>be.freeaime.main.EntryPoint</mainClass>
+                  <mainClass>be.freeaime.base.EntryPoint</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -54,16 +58,10 @@
     </plugins>
   </build>
   <properties>
-    <app.description>This app logs uptime in csv file. It currently only works on linux based operating systems.</app.description>
-    <maven.compiler.target>17</maven.compiler.target>
-    <java.version>17</java.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <org.apache.commons.lang3.version>3.12.0</org.apache.commons.lang3.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>4.13.1</junit.version>
-    <com.opencsv.version>5.7.1</com.opencsv.version>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <app.name>Uptime logging service</app.name>
-    <app.version>1.0.0</app.version>
+    <app.description>Logs uptime in a csv file. 
+            It currently only works on linux based operating systems.</app.description>
+    <app.artifactId>uptime-logger-service</app.artifactId>
+    <app.name>uptime logging service</app.name>
   </properties>
 </project>
+

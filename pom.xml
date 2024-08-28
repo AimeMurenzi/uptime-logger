@@ -3,16 +3,24 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>be.freeaime</groupId>
-    <artifactId>uptime-logger-service</artifactId>
-    <name>${app.name}</name>
-    <description>${app.description}</description>
-    <packaging>jar</packaging>
-    <version>${app.version}</version>
+    <!-- parent pom -->
+    <groupId>${app.parent.groupId}</groupId>
+    <artifactId>${app.parent.artifactId}</artifactId>
+    <version>${app.parent.version}</version>
+    <!-- ════════════════════════════════════ -->
+
+    <name>${app.parent.name}</name>
+    <description>${app.parent.description}</description>
+    <packaging>pom</packaging>
     <properties>
-        <app.name>Uptime logging service</app.name>
-        <app.description>This app logs uptime in csv file. It currently only works on linux based operating systems.</app.description>
-        <app.version>1.0.0</app.version>
+        <!-- <app.parent.packaging>pom</app.parent.packaging> -->
+        <app.parent.groupId>be.freeaime</app.parent.groupId>
+        <app.parent.artifactId>uptime-logger</app.parent.artifactId>
+        <app.parent.name>uptime logging</app.parent.name>
+        <app.parent.description>This app logs uptime in csv file. It currently only works on linux
+            based operating systems.</app.parent.description>
+        <app.parent.version>1.1.0</app.parent.version>
+        <app.child.packaging>jar</app.child.packaging>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -22,6 +30,10 @@
         <org.apache.commons.lang3.version>3.12.0</org.apache.commons.lang3.version>
         <junit.version>4.13.1</junit.version>
     </properties>
+    <modules>
+        <module>uptime-logger-manager</module>
+        <module>uptime-logger-service</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -41,55 +53,4 @@
             <version>${org.apache.commons.lang3.version}</version>
         </dependency>
     </dependencies>
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/properties-maven-plugin -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions> 
-                    <execution> 
-                        <phase>generate-resources</phase> 
-                        <goals> 
-                            <goal>write-project-properties</goal> 
-                        </goals> 
-                        <configuration> 
-                            <outputFile>${project.build.outputDirectory}/MainApp.properties</outputFile> 
-                        </configuration> 
-                    </execution> 
-                </executions> 
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>be.freeaime.main.MainApp</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
