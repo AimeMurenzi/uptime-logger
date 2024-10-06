@@ -1,10 +1,13 @@
-package be.freeaime.uptimeloggermanager;
+package be.freeaime.app.uptimeloggermanager;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
+
+import java.util.List;
 
 public class FxEntryPoint extends Application { 
     /**
@@ -25,12 +28,12 @@ public class FxEntryPoint extends Application {
 
    
     @Override
-    public void start(Stage primaryStage) throws Exception {  
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/uptimeLoggerManager.fxml"));
-        HBox root = loader.load();   
+    public void start(Stage primaryStage) throws Exception {   
+
+
 
         primaryStage.setTitle("uptime logger manager");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(Manager.get(), 800, 600));
         primaryStage.show(); 
     }
 

@@ -6,7 +6,7 @@
     <version>${app.parent.version}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${app.uptimeServiceName}</artifactId>
+  <artifactId>${app.artifactId}</artifactId>
   <packaging>${app.child.packaging}</packaging>
   <name>${app.name}</name>
   <description>${app.description}</description>
@@ -37,6 +37,30 @@
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.2</version>
+        <executions>
+          <execution>
+            <id>copy-uptime-loger-service-jar</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${app.parent.groupId}</groupId>
+                  <artifactId>${app.uptimeServiceName}</artifactId>
+                  <version>${app.parent.version}</version>
+                  <outputDirectory>${basedir}/src/main/resources/services</outputDirectory>
+                  <destFileName>${app.uptimeServiceName}.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.1</version>
         <executions>
@@ -58,10 +82,10 @@
     </plugins>
   </build>
   <properties>
-    <app.description>Logs uptime in a csv file. 
-            It currently only works on linux based operating systems.</app.description>
-    <app.entryPoint>EntryPointULS</app.entryPoint>
-    <app.name>uptime logging service</app.name>
+    <app.description>Installs and manages the state of uptime logger service.</app.description>
+    <app.entryPoint>EntryPointULM</app.entryPoint>
+    <app.artifactId>uptime-logger-manager</app.artifactId>
+    <app.name>uptime logger manager</app.name>
   </properties>
 </project>
 

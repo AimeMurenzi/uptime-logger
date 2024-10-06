@@ -25,6 +25,7 @@
         <app.artifactId>uptime-logger-manager</app.artifactId>
         <app.name>uptime logger manager</app.name>
         <app.description>Installs and manages the state of uptime logger service.</app.description>
+        <app.entryPoint>EntryPointULM</app.entryPoint>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
@@ -50,6 +51,11 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>22</version>
+        </dependency>
+        <dependency>
+            <groupId>${app.parent.groupId}</groupId>
+            <artifactId>${app.uptimeServiceName}</artifactId>
+            <version>${app.parent.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -82,6 +88,31 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-uptime-loger-service-jar</id>
+                        <phase>process-resources</phase> <!-- Copy during resource processing -->
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${app.parent.groupId}</groupId>
+                                    <artifactId>${app.uptimeServiceName}</artifactId>
+                                    <version>${app.parent.version}</version>
+                                    <outputDirectory>${basedir}/src/main/resources/services</outputDirectory>
+                                    <destFileName>${app.uptimeServiceName}.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.1</version>
                 <executions>
@@ -94,7 +125,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>be.freeaime.base.EntryPoint</mainClass>
+                                    <mainClass>be.freeaime.app.base.${app.entryPoint}</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

@@ -21,23 +21,23 @@
      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-     <Button fx:id="install" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Install" GridPane.columnIndex="2">
+     <Button fx:id="installBTN" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Install" GridPane.columnIndex="2">
             <font>
                <Font name="System Bold" size="32.0" />
             </font></Button>
-     <Button fx:id="enable" alignment="CENTER" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Enable" GridPane.columnIndex="2" GridPane.rowIndex="1">
+     <Button fx:id="enableBTN" alignment="CENTER" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Enable" GridPane.columnIndex="2" GridPane.rowIndex="1">
             <font>
                <Font name="System Bold" size="32.0" />
             </font></Button>
-     <Label fx:id="installedLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✖" GridPane.columnIndex="1">
+     <Label fx:id="installedStateLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✖" GridPane.columnIndex="1">
             <font>
                <Font name="System Bold" size="64.0" />
             </font></Label>
-     <Label fx:id="enabledLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✖" GridPane.columnIndex="1" GridPane.rowIndex="1">
+     <Label fx:id="enabledStateLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✖" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <font>
                <Font name="System Bold" size="64.0" />
             </font></Label>
-     <Label fx:id="runningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✔" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+     <Label fx:id="runningStateLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="✔" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <font>
                <Font name="System Bold" size="64.0" />
             </font></Label>
@@ -56,7 +56,7 @@
                <Font name="System Bold" size="32.0" />
             </font>
          </Label>
-         <Button fx:id="start" alignment="CENTER" layoutX="410.0" layoutY="170.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Start" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <Button fx:id="startBTN" alignment="CENTER" layoutX="410.0" layoutY="170.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Start" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <font>
                <Font name="System Bold" size="32.0" />
             </font>

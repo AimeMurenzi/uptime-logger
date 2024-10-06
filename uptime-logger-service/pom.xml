@@ -14,15 +14,17 @@
     <!-- ════════════════════════════════════ -->
     <!-- current -->
     <packaging>${app.child.packaging}</packaging>
-    <artifactId>${app.artifactId}</artifactId>
+    <artifactId>${app.uptimeServiceName}</artifactId>
     <name>${app.name}</name>
     <description>${app.description}</description>
+    
     <properties>
-        <app.artifactId>uptime-logger-service</app.artifactId>
+        <!-- <app.artifactId>${app.uptimeServiceName}</app.artifactId> -->
+        <app.entryPoint>EntryPointULS</app.entryPoint>
         <app.name>uptime logging service</app.name>
         <app.description>Logs uptime in a csv file. 
             It currently only works on linux based operating systems.
-        </app.description>
+        </app.description> 
     </properties>
     <dependencies>
 
@@ -69,7 +71,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>be.freeaime.base.EntryPoint</mainClass>
+                                    <mainClass>be.freeaime.app.base.${app.entryPoint}</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

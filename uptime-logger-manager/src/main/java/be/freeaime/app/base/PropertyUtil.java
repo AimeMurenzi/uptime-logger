@@ -1,4 +1,4 @@
-package be.freeaime.base;
+package be.freeaime.app.base;
 
 import java.io.InputStream;
 import java.util.Properties;

@@ -1,4 +1,4 @@
-package be.freeaime.base;
+package be.freeaime.app.base;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,7 +71,7 @@ public class RecordManager {
     }
 
     private void _printAllUptimeRecords() {
-        System.out.println(EntryPoint.ruler);
+        System.out.println(EntryPointULS.ruler);
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.uptimeRecords.forEach(record -> {
             final long bootTime=Long.parseLong(record[0]);
@@ -82,7 +82,7 @@ public class RecordManager {
             System.out.println(localDate.format(formatter));
             printRecord(record);
         });
-        System.out.println(EntryPoint.ruler);
+        System.out.println(EntryPointULS.ruler);
     }
 
     public static void printAllUptimeRecords() {
@@ -90,9 +90,9 @@ public class RecordManager {
     }
 
     private void _printUptime() {
-        System.out.println(EntryPoint.ruler);
+        System.out.println(EntryPointULS.ruler);
         printRecord(getNewUptimeRecord());
-        System.out.println(EntryPoint.ruler);
+        System.out.println(EntryPointULS.ruler);
     }
 
     /**
@@ -223,7 +223,7 @@ public class RecordManager {
     private String getJarDir() {
         try {
             // Get the URI of the JAR file
-            File jarFile = new File(EntryPoint.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            File jarFile = new File(EntryPointULS.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // Get the directory of the JAR file
             return jarFile.getParentFile().getPath();
         } catch (URISyntaxException e) {

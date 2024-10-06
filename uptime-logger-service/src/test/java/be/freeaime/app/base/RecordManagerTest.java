@@ -1,9 +1,11 @@
-package be.freeaime.base;
+package be.freeaime.app.base;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import be.freeaime.app.base.RecordManager;
 
 public class RecordManagerTest {
     @Test

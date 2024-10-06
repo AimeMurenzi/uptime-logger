@@ -40,3 +40,5 @@ test.js
 *.class
 utilities/ 
 /*media-key.so 
+*.service
+*.jar

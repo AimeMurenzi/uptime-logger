@@ -21,6 +21,7 @@
             based operating systems.</app.parent.description>
         <app.parent.version>1.1.0</app.parent.version>
         <app.child.packaging>jar</app.child.packaging>
+        <app.uptimeServiceName>uptime-logger-service</app.uptimeServiceName>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
