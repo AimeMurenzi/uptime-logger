@@ -142,10 +142,10 @@ public class ServiceStateUI {
 
     private EventHandler<ActionEvent> installBTNEventHandler() {
         return event -> {
-            // check if its already installed
+            // check if it already installed
             final boolean serviceIsInstalled = InstallerService.isServiceInstalled();
             if (serviceIsInstalled) {
-                // ask if user want to uninstall if yes
+                // ask if user wants to uninstall, if yes uninstall
                 uninstall();
             } else {
                 install();
@@ -194,37 +194,36 @@ public class ServiceStateUI {
     }
 
     private EventHandler<ActionEvent> startBTNEventHandler() {
-        return event -> {  
-            final boolean serviceIsRunning=InstallerService.isServiceRunning();
+        return event -> {
+            final boolean serviceIsRunning = InstallerService.isServiceRunning();
             if (serviceIsRunning) {
                 final String title = "Stop Uptime Logger Service";
                 final String header = "This will stop the Uptime Logger Service";
                 final String message = "Do you want to proceed?";
-                final boolean userConfirmsStopService = yesNoDialogue(title, header, message); 
+                final boolean userConfirmsStopService = yesNoDialogue(title, header, message);
                 if (userConfirmsStopService) {
                     try {
-                         InstallerService.stopService();  
-                    }  catch (RuntimeException e) {
+                        InstallerService.stopService();
+                    } catch (RuntimeException e) {
                         final String errorMessage[] = e.getMessage().split(",");
-                        showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]); 
-                    }                
+                        showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]);
+                    }
                 }
-            }else{
+            } else {
                 try {
-                    InstallerService.startService(); 
-               }  catch (RuntimeException e) {
-                   final String errorMessage[] = e.getMessage().split(",");
-                   showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]); 
-               }      
+                    InstallerService.startService();
+                } catch (RuntimeException e) {
+                    final String errorMessage[] = e.getMessage().split(",");
+                    showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]);
+                }
             }
-            updateRunningUIState(); 
-            
+            updateRunningUIState();
         };
     }
 
     private void updateRunningUIState() {
-        final boolean isServiceRunning=InstallerService.isServiceRunning();
-        runningStateLabel.setText(isServiceRunning ?ON_STATE  : OFF_STATE);
+        final boolean isServiceRunning = InstallerService.isServiceRunning();
+        runningStateLabel.setText(isServiceRunning ? ON_STATE : OFF_STATE);
         startBTN.setText(isServiceRunning ? "Stop" : "Start");
     }
 

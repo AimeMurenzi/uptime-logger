@@ -10,12 +10,13 @@ public class PropertyUtil {
         this.properties = new Properties();
         try (final InputStream propertiesInputStream = getClass().getClassLoader()
                 .getResourceAsStream("app.properties")) {
-                    if (propertiesInputStream!=null) {
-                        this.properties.load(propertiesInputStream); 
-                    } 
-        } catch (Exception e) { 
-        } 
+            if (propertiesInputStream != null) {
+                this.properties.load(propertiesInputStream);
+            }
+        } catch (Exception e) {
+        }
     }
+
     public static String getProperty(String propertyName) {
         return getInstance().properties.getProperty(propertyName);
     }

@@ -23,9 +23,7 @@ public class InstallerService {
 
     /**
      * assuming the install will be on debian or system with the same system file
-     * structure
-     * 
-     * 
+     * structure 
      */
     private InstallerService() {
     }
@@ -34,7 +32,7 @@ public class InstallerService {
         sudoUserCheck();
         // TODO:DONE first stop then disable service
         Tool.stopAllUptimeLoggers();
-        // copy uptime service to proper location /opt/uptime-logger/
+        // Copy uptime service to proper location /opt/uptime-logger/
         copyServiceJarToInstallDestination();
         // final String USERNAME= System.getProperty("user.name");
         final String SUDO_USER = System.getenv("SUDO_USER");
@@ -50,7 +48,6 @@ public class InstallerService {
             System.out.println(errorMessage);
             throw new RuntimeException(errorMessage);
         }
-
         final StringBuilder serviceConfig = new StringBuilder();
         serviceConfig.append("[Unit]");
         serviceConfig.append("\nDescription=Uptime Logging Service");
@@ -74,31 +71,14 @@ public class InstallerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /**
-         * [Unit]
-         * Description=Uptime Logging Service
-         * After=multi-user.target
-         * 
-         * [Service]
-         * User=dev
-         * ExecStart=/usr/bin/java -jar /opt/be/freeaime/uptime-logger-service.jar
-         * SuccessExitStatus=143
-         * Restart=on-failure
-         * RestartSec=10
-         * 
-         * [Install]
-         * WantedBy=multi-user.target
-         */
     }
 
     private static boolean copyServiceJarToInstallDestination() {
         final String SERVICE_JAR_DST_DIR_STRING = Config.SERVICE_JAR_DST_DIR;
-
-        // where uptime logger runnable jar is located in the jar
+        // Where uptime logger runnable jar is located in the jar
         final String SERVICE_JAR_SRC_STRING = "/services/" + SERVICE_JAR_NAME;
-        // install directory path
-        final Path SERVICE_JAR_DST_DIR_PATH = Paths.get(SERVICE_JAR_DST_DIR_STRING);
-        // final destination path of where the service jar will be placed
+        // Install directory path
+        final Path SERVICE_JAR_DST_DIR_PATH = Paths.get(SERVICE_JAR_DST_DIR_STRING);       
 
         try {
             Files.createDirectories(SERVICE_JAR_DST_DIR_PATH);
@@ -112,15 +92,7 @@ public class InstallerService {
                 System.out.println("Path String: " + SERVICE_JAR_DST_DIR_PATH);
                 Files.copy(SERVICE_JAR_SRC, SERVICE_JAR_DST_FILE_PATH, StandardCopyOption.REPLACE_EXISTING);
                 return true;
-            }
-
-            // catch (AccessDeniedException ade) {
-            // final String errorMessageString = "An error occurred while moving uptime
-            // logger service to "
-            // + SERVICE_JAR_DST_DIR_PATH;
-            // System.out.println(errorMessageString);
-            // throw new RuntimeException(errorMessageString);
-            // }
+            } 
         } catch (AccessDeniedException ade) {
             final String errorMessageString = "Your user does not have permission create directories in /opt. Please run the app using a user that has permission to read and write in /opt such as sudo";
             System.out.println(errorMessageString);
@@ -152,28 +124,6 @@ public class InstallerService {
         }
         return false;
     }
-    // public static boolean isServiceEnabled() {
-    // try {
-    // final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
-    // "systemctl list-units --type=service --all | grep " +
-    // SERVICE_NAME);
-    // final Process process = processBuilder.start();
-    // try (final BufferedReader bufferedReader = new BufferedReader(
-    // new InputStreamReader(process.getInputStream()))) {
-    // String line;
-    // while ((line = bufferedReader.readLine()) != null) {
-    // if (line.contains(Config.SERVICE_NAME)) {
-    // return true;
-    // }
-    // }
-    // }
-    // process.waitFor();
-    // } catch (IOException | InterruptedException e) {
-    // e.printStackTrace();
-    // }
-    // return false;
-    // }
-
     private static boolean isSudoUser() {
         final ProcessBuilder processBuilder = new ProcessBuilder("id", "-u");
         try {
@@ -205,16 +155,6 @@ public class InstallerService {
 
     public static void startService() {
         sudoUserCheck();
-        // final boolean serviceIsNotEnabled = !isServiceEnabled();
-        // if (serviceIsNotEnabled) {
-        // final String title = "Start Service Issue";
-        // final String header = "Service is not enabled";
-        // final String message = "There was a problem while starting the service.
-        // Service is not enabled";
-        // final String errorMessage = String.format("%s,%s,%s", title, header,
-        // message);
-        // throw new RuntimeException(errorMessage);
-        // }
         final boolean serviceIsNotInstalled = !isServiceInstalled();
         if (serviceIsNotInstalled) {
             final String title = "Start Service Issue";
@@ -236,16 +176,6 @@ public class InstallerService {
 
     public static void stopService() {
         sudoUserCheck();
-        // final boolean serviceIsNotEnabled = !isServiceEnabled();
-        // if (serviceIsNotEnabled) {
-        // final String title = "Stop Service Issue";
-        // final String header = "Service is not enabled";
-        // final String message = "There was a problem while stopping the service.
-        // Service is not enabled";
-        // final String errorMessage = String.format("%s,%s,%s", title, header,
-        // message);
-        // throw new RuntimeException(errorMessage);
-        // }
         final boolean serviceIsNotInstalled = !isServiceInstalled();
         if (serviceIsNotInstalled) {
             final String title = "Stop Service Issue";
@@ -313,17 +243,6 @@ public class InstallerService {
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
         }
-        // final boolean commandFailed=!executeCommand(String.format("sudo rm %s",
-        // SERVICE_INSTALL_DST_FILE_PATH));
-        // if (commandFailed) {
-        // final String title = "Removing Service Config Issue";
-        // final String header = "There was a problem while removing the service config
-        // file";
-        // final String message = "Failed to remove the service config file";
-        // final String errorMessage = String.format("%s,%s,%s", title, header,
-        // message);
-        // throw new RuntimeException(errorMessage);
-        // }
     }
 
     public static void removeServiceJarFile() {

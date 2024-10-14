@@ -12,7 +12,8 @@
 
 <!-- <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?> -->
 
-<HBox stylesheets="@../css/manager.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<HBox stylesheets="@../css/manager.css" xmlns="http://javafx.com/javafx/22"
+   xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane>
          <center>
@@ -22,7 +23,8 @@
                      <children>
                         <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0">
                            <children>
-                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Uptime Logger Manager" textAlignment="CENTER">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                                 text="Uptime Logger Manager" textAlignment="CENTER">
                                  <font>
                                     <Font name="System Bold" size="32.0" />
                                  </font>
@@ -35,7 +37,10 @@
                         </VBox>
                         <VBox fx:id="selectedOptionContainerVbox" VBox.vgrow="ALWAYS">
                            <children>
-                              <TextArea fx:id="logRecordTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   " VBox.vgrow="ALWAYS">
+                              <TextArea fx:id="logRecordTextArea" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308"
+                                 text="2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   2024-08-28 # 0002Days # 09H:34M \n                   "
+                                 VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="13.0" />
                                  </font>
@@ -58,7 +63,8 @@
                <children>
                   <VBox VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" VBox.vgrow="ALWAYS">
+                        <HBox maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT"
+                           VBox.vgrow="ALWAYS">
                            <children>
                               <Separator maxHeight="1.7976931348623157E308" orientation="VERTICAL" />
                            </children>
@@ -67,12 +73,14 @@
                   </VBox>
                   <VBox spacing="5.0" VBox.vgrow="SOMETIMES">
                      <children>
-                        <ToggleButton fx:id="serviceStateToggle" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="SERVICE STATE" textAlignment="CENTER">
+                        <ToggleButton fx:id="serviceStateToggle" maxWidth="1.7976931348623157E308"
+                           mnemonicParsing="false" text="SERVICE STATE" textAlignment="CENTER">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="recordsOptionToggle" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="RECORDS" textAlignment="CENTER">
+                        <ToggleButton fx:id="recordsOptionToggle" maxWidth="1.7976931348623157E308"
+                           mnemonicParsing="false" text="RECORDS" textAlignment="CENTER">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
@@ -85,7 +93,8 @@
                         <Insets bottom="10.0" top="10.0" />
                      </padding>
                   </VBox>
-                  <HBox layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" VBox.vgrow="ALWAYS">
+                  <HBox layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308"
+                     nodeOrientation="RIGHT_TO_LEFT" VBox.vgrow="ALWAYS">
                      <children>
                         <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS" />
                      </children>

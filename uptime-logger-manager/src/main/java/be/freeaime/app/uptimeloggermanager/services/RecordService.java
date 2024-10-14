@@ -34,7 +34,7 @@ public class RecordService {
 
     }
 
-    public static boolean recordHasInvalidValues(String[] uptimeRecord) {
+    private static boolean recordHasInvalidValues(String[] uptimeRecord) {
         try {
             for (int i = 0; i < 2; i++) {
                 Long.parseLong(uptimeRecord[i]);
@@ -106,5 +106,4 @@ public class RecordService {
         }
         return new ArrayList<>();
     }
-
 }

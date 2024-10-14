@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 public class FxEntryPoint extends Application { 
     @Override
     public void start(Stage primaryStage) throws Exception {   
-        primaryStage.setTitle("uptime logger manager");
+        primaryStage.setTitle("Uptime Logger Manager");
         primaryStage.setScene(new Scene(Manager.get(), 800, 600));
         primaryStage.show(); 
     }
