@@ -1,70 +1,52 @@
-package be.freeaime.app.uptimeloggermanager;
+package be.freeaime.app.uptimeloggermanager.services;
 
 import java.io.*;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.GridPane;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import com.sun.tools.attach.VirtualMachine;
-import com.sun.tools.attach.VirtualMachineDescriptor;
+import be.freeaime.app.uptimeloggermanager.Config;
+import be.freeaime.app.uptimeloggermanager.Tool;
 
-import be.freeaime.app.base.EntryPointULM;
-import be.freeaime.app.base.PropertyUtil;
 import java.nio.file.*;
 
-import java.util.*;
-
-public class Installer {
+public class InstallerService {
     private class Holder {
-        private static Installer INSTANCE = new Installer();
+        private static InstallerService INSTANCE = new InstallerService();
     }
 
-    public static Installer getInstance() {
+    public static InstallerService getInstance() {
         return Holder.INSTANCE;
     }
 
-    private static final String serviceName = Config.SERVICE_INSTALL_NAME;
+    private static final String SERVICE_NAME = Config.SERVICE_INSTALL_NAME;
     private static final String SERVICE_JAR_NAME = Config.SERVICE_JAR_NAME;
     private static final Path SERVICE_JAR_DST_FILE_PATH = Paths.get(Config.SERVICE_JAR_DST_DIR, SERVICE_JAR_NAME);
     private static final Path SERVICE_INSTALL_DST_FILE_PATH = Paths.get(Config.SERVICE_INSTALL_DST_DIR,
-            Config.SERVICE_INSTALL_NAME);
+            SERVICE_NAME);
 
-    private Installer() {
-        /**
-         * assuming the install will be on debian or system with the same system file
-         * structure
-         * 
-         * 
-         */
-        // TODO: check if service is already installed
-        // TODO: if not install
-        //
+    /**
+     * assuming the install will be on debian or system with the same system file
+     * structure
+     * 
+     * 
+     */
+    private InstallerService() {
     }
 
-    public static void install() { 
+    public static void install() {
         sudoUserCheck();
-        // TODO first stop then disable service
+        // TODO:DONE first stop then disable service
         Tool.stopAllUptimeLoggers();
         // copy uptime service to proper location /opt/uptime-logger/
         copyServiceJarToInstallDestination();
         // final String USERNAME= System.getProperty("user.name");
         final String SUDO_USER = System.getenv("SUDO_USER");
 
-        // TODO:DONE change the owner of the service directory to    current user
+        // TODO:DONE change the owner of the service directory to current user
         final boolean changingOwnerFailed = !executeCommand(
                 String.format("sudo chown %s:%s -R %s", SUDO_USER, SUDO_USER, Config.SERVICE_JAR_DST_DIR));
         if (changingOwnerFailed) {
             final String title = "Authorization Issue";
             final String header = String.format("Failed to change the owner of service directory to current user(%s)",
                     SUDO_USER);
-            final String errorMessage = String.format("%s,%s,%s", title, header,"");
+            final String errorMessage = String.format("%s,%s,%s", title, header, "");
             System.out.println(errorMessage);
             throw new RuntimeException(errorMessage);
         }
@@ -121,7 +103,8 @@ public class Installer {
         try {
             Files.createDirectories(SERVICE_JAR_DST_DIR_PATH);
             System.out.println(SERVICE_JAR_DST_DIR_STRING + " directory successfully created!");
-            try (final InputStream SERVICE_JAR_SRC = Installer.class.getResourceAsStream(SERVICE_JAR_SRC_STRING)) {
+            try (final InputStream SERVICE_JAR_SRC = InstallerService.class
+                    .getResourceAsStream(SERVICE_JAR_SRC_STRING)) {
                 if (SERVICE_JAR_SRC == null) {
                     System.out.println("Resource not found: " + SERVICE_JAR_SRC_STRING);
                     return false;
@@ -155,11 +138,13 @@ public class Installer {
 
     public static boolean isServiceEnabled() {
         try {
-            final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "systemctl is-enabled " + Config.SERVICE_INSTALL_NAME);
+            final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
+                    String.format("systemctl is-enabled %s", SERVICE_NAME));
             final Process process = processBuilder.start();
-            try ( final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try (final BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()))) {
                 final String line = bufferedReader.readLine(); // Read first line of output
-                process.waitFor(); 
+                process.waitFor();
                 return line.equals("enabled");
             }
         } catch (IOException | InterruptedException e) {
@@ -168,24 +153,25 @@ public class Installer {
         return false;
     }
     // public static boolean isServiceEnabled() {
-    //     try {
-    //         final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
-    //                 "systemctl list-units --type=service --all | grep " + Config.SERVICE_INSTALL_NAME);
-    //         final Process process = processBuilder.start();
-    //         try (final BufferedReader bufferedReader = new BufferedReader(
-    //                 new InputStreamReader(process.getInputStream()))) {
-    //             String line;
-    //             while ((line = bufferedReader.readLine()) != null) {
-    //                 if (line.contains(Config.SERVICE_NAME)) {
-    //                     return true;
-    //                 }
-    //             }
-    //         }
-    //         process.waitFor();
-    //     } catch (IOException | InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return false;
+    // try {
+    // final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
+    // "systemctl list-units --type=service --all | grep " +
+    // SERVICE_NAME);
+    // final Process process = processBuilder.start();
+    // try (final BufferedReader bufferedReader = new BufferedReader(
+    // new InputStreamReader(process.getInputStream()))) {
+    // String line;
+    // while ((line = bufferedReader.readLine()) != null) {
+    // if (line.contains(Config.SERVICE_NAME)) {
+    // return true;
+    // }
+    // }
+    // }
+    // process.waitFor();
+    // } catch (IOException | InterruptedException e) {
+    // e.printStackTrace();
+    // }
+    // return false;
     // }
 
     private static boolean isSudoUser() {
@@ -215,37 +201,59 @@ public class Installer {
             // e.printStackTrace();
         }
         return false;
-    } 
+    }
+
     public static void startService() {
         sudoUserCheck();
-        final boolean serviceIsNotEnabled=!isServiceEnabled();
-        if (serviceIsNotEnabled) {
+        // final boolean serviceIsNotEnabled = !isServiceEnabled();
+        // if (serviceIsNotEnabled) {
+        // final String title = "Start Service Issue";
+        // final String header = "Service is not enabled";
+        // final String message = "There was a problem while starting the service.
+        // Service is not enabled";
+        // final String errorMessage = String.format("%s,%s,%s", title, header,
+        // message);
+        // throw new RuntimeException(errorMessage);
+        // }
+        final boolean serviceIsNotInstalled = !isServiceInstalled();
+        if (serviceIsNotInstalled) {
             final String title = "Start Service Issue";
-            final String header = "Service is not enabled";
-            final String message = "There was a problem while starting the service. Service is not enabled";
+            final String header = "Service is not installed";
+            final String message = "There was a problem while starting the service. Please install service first";
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
         }
-        final boolean commandFailed = !executeCommand(String.format("sudo systemctl start %s", serviceName));
+
+        final boolean commandFailed = !executeCommand(String.format("sudo systemctl start %s", SERVICE_NAME));
         if (commandFailed) {
             final String title = "Start Service Issue";
             final String header = "There was a problem while starting the service";
             final String message = "Failed start the service";
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
-        } 
+        }
     }
+
     public static void stopService() {
         sudoUserCheck();
-        final boolean serviceIsNotEnabled=!isServiceEnabled();
-        if (serviceIsNotEnabled) {
+        // final boolean serviceIsNotEnabled = !isServiceEnabled();
+        // if (serviceIsNotEnabled) {
+        // final String title = "Stop Service Issue";
+        // final String header = "Service is not enabled";
+        // final String message = "There was a problem while stopping the service.
+        // Service is not enabled";
+        // final String errorMessage = String.format("%s,%s,%s", title, header,
+        // message);
+        // throw new RuntimeException(errorMessage);
+        // }
+        final boolean serviceIsNotInstalled = !isServiceInstalled();
+        if (serviceIsNotInstalled) {
             final String title = "Stop Service Issue";
-            final String header = "Service is not enabled";
-            final String message = "There was a problem while stopping the service. Service is not enabled";
-            final String errorMessage = String.format("%s,%s,%s", title, header, message);
+            final String header = "Service is not installed";
+            final String errorMessage = String.format("%s,%s,%s", title, header, "");
             throw new RuntimeException(errorMessage);
         }
-        final boolean commandFailed = !executeCommand(String.format("sudo systemctl stop %s", serviceName));
+        final boolean commandFailed = !executeCommand(String.format("sudo systemctl stop %s", SERVICE_NAME));
         if (commandFailed) {
             final String title = "Stop Service Issue";
             final String header = "There was a problem while stopping the service";
@@ -257,7 +265,7 @@ public class Installer {
 
     public static void disableService() {
         sudoUserCheck();
-        final boolean serviceIsNotInstalled=!isServiceInstalled();
+        final boolean serviceIsNotInstalled = !isServiceInstalled();
         if (serviceIsNotInstalled) {
             final String title = "Disable Service Issue";
             final String header = "Service is not installed";
@@ -265,7 +273,7 @@ public class Installer {
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
         }
-        final boolean commandFailed = !executeCommand(String.format("sudo systemctl disable %s", serviceName));
+        final boolean commandFailed = !executeCommand(String.format("sudo systemctl disable %s", SERVICE_NAME));
         if (commandFailed) {
             final String title = "Disable Service Issue";
             final String header = "There was a problem while disabling the service";
@@ -274,9 +282,10 @@ public class Installer {
             throw new RuntimeException(errorMessage);
         }
     }
+
     public static void enableService() {
         sudoUserCheck();
-        final boolean serviceIsNotInstalled=!isServiceInstalled();
+        final boolean serviceIsNotInstalled = !isServiceInstalled();
         if (serviceIsNotInstalled) {
             final String title = "Enable Service Issue";
             final String header = "Service is not installed";
@@ -284,7 +293,7 @@ public class Installer {
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
         }
-        final boolean commandFailed = !executeCommand(String.format("sudo systemctl enable %s", serviceName));
+        final boolean commandFailed = !executeCommand(String.format("sudo systemctl enable %s", SERVICE_NAME));
         if (commandFailed) {
             final String title = "Enable Service Issue";
             final String header = "There was a problem while enabling the service";
@@ -355,6 +364,27 @@ public class Installer {
             final String errorMessage = String.format("%s,%s,%s", title, header, message);
             throw new RuntimeException(errorMessage);
         }
+    }
+
+    public static boolean isServiceRunning() {
+        final ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
+                String.format("systemctl is-active %s", SERVICE_NAME));
+        try {
+            final Process process = processBuilder.start();
+            String line;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                while ((line = reader.readLine()) != null) {
+                    System.out.println("inactive " + line + "==" + line.equals("inactive"));
+                    if (line.equals("inactive")) {
+                        return false;
+                    }
+                }
+                process.waitFor();
+            }
+        } catch (IOException | InterruptedException e) {
+            // e.printStackTrace();
+        }
+        return true;
     }
 
 }

@@ -79,7 +79,9 @@ public class RecordManager {
             // final ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
             // final LocalDate localDate = zonedDateTime.toLocalDate();
             final LocalDate localDate=LocalDate.ofInstant(Instant.ofEpochSecond(bootTime),ZoneId.systemDefault());
+
             System.out.println(localDate.format(formatter));
+            
             printRecord(record);
         });
         System.out.println(EntryPointULS.ruler);

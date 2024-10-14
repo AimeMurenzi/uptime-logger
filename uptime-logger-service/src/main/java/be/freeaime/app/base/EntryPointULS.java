@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class EntryPointULS {
     public static final String ruler = "════════════════════════════════════════════════════════════════════════";
-    // TODO: add command to list records boot date and with their uptime
+    // TODO:DONE add command to list records boot date and with their uptime
     public static void main(String... args) throws IOException {
         final String osName = System.getProperty("os.name").toLowerCase();
         final boolean serviceIsNotRunningOnLinux = !osName.contains("linux");

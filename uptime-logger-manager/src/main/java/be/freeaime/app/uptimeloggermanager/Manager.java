@@ -2,10 +2,12 @@ package be.freeaime.app.uptimeloggermanager;
 
 import java.io.IOException;
 
+import be.freeaime.app.uptimeloggermanager.services.RecordService;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
@@ -34,16 +36,26 @@ public class Manager {
     private final GridPane serviceStateUI = ServiceStateUI.get();
     private final ToggleGroup optionToggleGroup = new ToggleGroup();
     public static final String ruler = "════════════════════════════════════════════════════════════════════════";
+    private final String serviceStateToggleSelected = "serviceStateToggle";
+    private final String recordsOptionToggleSelected = "recordsOptionToggle";
+
     private Manager() {
         this.root = getLoadedRoot();
         serviceStateToggle.setToggleGroup(optionToggleGroup);
         recordsOptionToggle.setToggleGroup(optionToggleGroup);
-        final String serviceStateToggleSelected = "serviceStateToggle";
-        final String recordsOptionToggleSelected = "recordsOptionToggle";
+
         serviceStateToggle.setUserData(serviceStateToggleSelected);
         recordsOptionToggle.setUserData(recordsOptionToggleSelected);
 
-        optionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+        optionToggleGroup.selectedToggleProperty().addListener(getOptionToggleGroupEventHandler());
+
+        serviceStateToggle.setSelected(true);
+
+        logRecordTextArea.setText(RecordService.getRecords());
+    }
+
+    private ChangeListener<? super Toggle> getOptionToggleGroupEventHandler() {
+        return (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 ToggleButton selectedButton = (ToggleButton) newValue;
                 final String selected = (String) selectedButton.getUserData();
@@ -53,6 +65,7 @@ public class Manager {
                         selectedOptionContainerVbox.getChildren().add(serviceStateUI);
                         break;
                     case recordsOptionToggleSelected:
+                        logRecordTextArea.setText(RecordService.getRecords());
                         selectedOptionContainerVbox.getChildren().remove(serviceStateUI);
                         selectedOptionContainerVbox.getChildren().add(logRecordTextArea);
                         break;
@@ -60,14 +73,7 @@ public class Manager {
                         break;
                 }
             }
-        });
-
-        serviceStateToggle.setSelected(true);
-        logRecordTextArea.setText("2024-08-28 # 0002Days # 09H:34M \n" + //
-                        "2024-08-28 # 0002Days # 09H:34M \n" + //
-                        "2024-08-28 # 0002Days # 09H:34M \n" + //
-                        "2024-08-28 # 0002Days # 09H:34M \n" );
-
+        };
     }
 
     private HBox getLoadedRoot() {

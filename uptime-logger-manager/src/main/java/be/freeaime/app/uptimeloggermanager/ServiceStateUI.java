@@ -10,19 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.GridPane;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import com.sun.tools.attach.VirtualMachine;
-import com.sun.tools.attach.VirtualMachineDescriptor;
-
-import be.freeaime.app.base.EntryPointULM;
-import be.freeaime.app.base.PropertyUtil;
+import be.freeaime.app.uptimeloggermanager.services.InstallerService;
 
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 
 public class ServiceStateUI {
     private static class Holder {
@@ -34,7 +25,7 @@ public class ServiceStateUI {
     }
 
     /**
-     * TODO: implement the following
+     * TODO:DONE implement the following
      * logRecordTextArea
      * //used to replace currently being viewed
      * selectedOptionContainerVbox
@@ -83,7 +74,7 @@ public class ServiceStateUI {
     }
 
     private void updateInstalledUIState() {
-        final boolean serviceIsInstalled = Installer.isServiceInstalled();
+        final boolean serviceIsInstalled = InstallerService.isServiceInstalled();
         if (serviceIsInstalled) {
             this.installedStateLabel.setText(ON_STATE);
             this.installBTN.setText("Uninstall");
@@ -97,6 +88,7 @@ public class ServiceStateUI {
         this.root = getLoadedRoot();
         updateInstalledUIState();
         updateEnabledUIState();
+        updateRunningUIState();
         final List<Long> uptimeLoggerPidList = Tool.serviceRunningCheck();
         final boolean isServiceRunning = uptimeLoggerPidList.size() != 0;
         runningStateLabel.setText(isServiceRunning ? ON_STATE : OFF_STATE);
@@ -110,14 +102,14 @@ public class ServiceStateUI {
     private EventHandler<ActionEvent> enableBTNEventHandler() {
         return event -> {
             try {
-                final boolean serviceIsEnabled = Installer.isServiceEnabled();
+                final boolean serviceIsEnabled = InstallerService.isServiceEnabled();
                 if (serviceIsEnabled) {
                     final String title = "Disable Uptime Logger Service";
                     final String header = "This will disable the Uptime Logger Service";
                     final String message = "Do you want to proceed?";
                     final boolean userConfirmsDisableService = yesNoDialogue(title, header, message);
                     if (userConfirmsDisableService) {
-                        Installer.disableService();
+                        InstallerService.disableService();
                     }
                 } else {
                     final String title = "Enable Uptime Logger Service";
@@ -125,20 +117,20 @@ public class ServiceStateUI {
                     final String message = "Do you want to proceed?";
                     final boolean userConfirmsDisableService = yesNoDialogue(title, header, message);
                     if (userConfirmsDisableService) {
-                        Installer.enableService();
+                        InstallerService.enableService();
                     }
                 }
-
             } catch (RuntimeException e) {
                 final String errorMessage[] = e.getMessage().split(",");
                 showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]);
             }
             updateEnabledUIState();
+            updateRunningUIState();
         };
     }
 
     private void updateEnabledUIState() {
-        final boolean serviceIsEnabled = Installer.isServiceEnabled();
+        final boolean serviceIsEnabled = InstallerService.isServiceEnabled();
         if (serviceIsEnabled) {
             enableBTN.setText("Disable");
             enabledStateLabel.setText(ON_STATE);
@@ -151,7 +143,7 @@ public class ServiceStateUI {
     private EventHandler<ActionEvent> installBTNEventHandler() {
         return event -> {
             // check if its already installed
-            final boolean serviceIsInstalled = Installer.isServiceInstalled();
+            final boolean serviceIsInstalled = InstallerService.isServiceInstalled();
             if (serviceIsInstalled) {
                 // ask if user want to uninstall if yes
                 uninstall();
@@ -160,6 +152,7 @@ public class ServiceStateUI {
             }
             updateInstalledUIState();
             updateEnabledUIState();
+            updateRunningUIState();
         };
     }
 
@@ -169,7 +162,7 @@ public class ServiceStateUI {
             return;
         }
         try {
-            Installer.install();
+            InstallerService.install();
             final String infoTitle = "Install Uptime Logger Service";
             final String infoHeader = "Service was successfully installed";
             showInfoDialog(infoTitle, infoHeader, null);
@@ -186,7 +179,7 @@ public class ServiceStateUI {
         final boolean userConfirmsUninstall = yesNoDialogue(title, header, message);
         if (userConfirmsUninstall) {
             try {
-                Installer.uninstallService();
+                InstallerService.uninstallService();
                 final String infoTitle = "Uninstall Uptime Logger Service";
                 final String infoHeader = "Service was successfully uninstalled";
                 showInfoDialog(infoTitle, infoHeader, null);
@@ -202,34 +195,36 @@ public class ServiceStateUI {
 
     private EventHandler<ActionEvent> startBTNEventHandler() {
         return event -> {  
-            final List<Long> runningServicePidList = Tool.serviceRunningCheck();
-            final boolean serviceIsRunning = runningServicePidList.size() != 0;
+            final boolean serviceIsRunning=InstallerService.isServiceRunning();
             if (serviceIsRunning) {
-                final boolean wasTerminationSuccessful = terminateAllRunningServices();
-                updateRunningStateUI(wasTerminationSuccessful);
-            } else {
-                // TODO: check if systemctl is available
-                // TODO: check if service is installed
-                // TODO: move isServiceInstalled to tool
-                final boolean serviceIsInstalled = Installer.isServiceInstalled();
-                if (serviceIsInstalled) {
-                    // TODO: check if service is enabled
-                    final boolean serviceIsEnabled = Installer.isServiceEnabled();
-                    if (serviceIsEnabled) {
-                        // TODO: start start service
-                        Installer.startService();
-                    }
+                final String title = "Stop Uptime Logger Service";
+                final String header = "This will stop the Uptime Logger Service";
+                final String message = "Do you want to proceed?";
+                final boolean userConfirmsStopService = yesNoDialogue(title, header, message); 
+                if (userConfirmsStopService) {
+                    try {
+                         InstallerService.stopService();  
+                    }  catch (RuntimeException e) {
+                        final String errorMessage[] = e.getMessage().split(",");
+                        showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]); 
+                    }                
                 }
-                final List<Long> runningServicePidList_ = Tool.serviceRunningCheck();
-                final boolean isServiceRunning_ = runningServicePidList_.size() != 0;
-                updateRunningStateUI(isServiceRunning_);
+            }else{
+                try {
+                    InstallerService.startService(); 
+               }  catch (RuntimeException e) {
+                   final String errorMessage[] = e.getMessage().split(",");
+                   showErrorDialog(errorMessage[0], errorMessage[1], errorMessage[2]); 
+               }      
             }
-
+            updateRunningUIState(); 
+            
         };
     }
 
-    private void updateRunningStateUI(final boolean isServiceRunning) {
-        runningStateLabel.setText(isServiceRunning ? OFF_STATE : ON_STATE);
+    private void updateRunningUIState() {
+        final boolean isServiceRunning=InstallerService.isServiceRunning();
+        runningStateLabel.setText(isServiceRunning ?ON_STATE  : OFF_STATE);
         startBTN.setText(isServiceRunning ? "Stop" : "Start");
     }
 
